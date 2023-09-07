@@ -24,5 +24,8 @@ public class DancerMain {
         hong.stretch();
         hong.introduce();
         hong.dance();
+
+        System.out.println(kim);
+        System.out.println(park);
     }
 }
