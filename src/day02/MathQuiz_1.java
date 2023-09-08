@@ -57,7 +57,7 @@ public class MathQuiz_1 {
         int newSize = foods.length + more;// 3 +4
         String[] temp = makeNew(newSize);
 
-        int loopCount = (more > 0) ? newSize - 1 : newSize;
+        int loopCount = (more > 0) ? newSize - more : newSize;
         //
         for (int i = 0; i < loopCount; i++) {
             temp[i] = foods[i];
