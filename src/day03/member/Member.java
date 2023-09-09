@@ -31,10 +31,15 @@ public class Member {
         return String.format("%d번 | %s | %s | %s | %d세"
                 ,this.memberId,this.email,this.memberName,convertGender,this.age);
     }
-    String personalInform(){
-        String convertGender=this.gender==Gender.MALE?"남성":"여성";
-        return String.format("|이름 :%s |\n|이메일: %s |\n |패스워드: %s |"
-                ,this.memberName,this.email,this.password);
+    // 회원 정보를 디테일 출력
+    void showDetailInfo() {
+        System.out.printf("========= [%s]님 정보 조회 ========\n", this.memberName);
+        System.out.println("# 회원번호: " + this.memberId);
+        System.out.println("# 이메일: " + this.email);
+        System.out.println("# 비밀번호: " + this.password);
+        System.out.println("# 성별: " + (this.gender == Gender.MALE ? "남성" : "여성"));
+        System.out.println("# 나이: " + this.age + "세");
+        System.out.println();
     }
 }
 

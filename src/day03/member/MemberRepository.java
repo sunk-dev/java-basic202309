@@ -1,179 +1,141 @@
 package day03.member;
 
-//책임(역할):회원을 여러명 저장 관리하는 클래스
+// 책임(역할): 회원을 여러명 저장 관리하는 클래스
 public class MemberRepository {
-    //필드 :회원 배열
-    Member [] memberList;//가입된 회원배열
-    Member[] removeMembers;//삭제된 회원 배열
+
+    // 필드: 회원 배열
+    // [ { id: 1, name: 'ddd' }, {} ]
+    Member[] memberList; // 가입된 회원 배열
+    Member[] removeMembers; // 삭제된 회원 배열
 
     public MemberRepository() {
-        this.memberList=new Member[]{
-                new Member(1,"aaa@def.com","1234","콩벌레",Gender.MALE,15),
-                new Member(2,"bbb@def.com","2345","팥죽이",Gender.FEMALE,35),
-                new Member(3,"ccc@def.com","3456","카레맨",Gender.MALE,45),
-                new Member(3,"ddd@def.com","3456","카레맨",Gender.MALE,45),
-                new Member(3,"eee@def.com","3456","카레맨",Gender.MALE,45),
-                new Member(3,"fff@def.com","3456","카레맨",Gender.MALE,45),
-                new Member(3,"ggg@def.com","3456","카레맨",Gender.MALE,45),
-                new Member(3,"hhh@def.com","3456","카레맨",Gender.MALE,45),
-                new Member(3,"iii@def.com","3456","카레맨",Gender.MALE,45),
-                new Member(3,"jjj@def.com","3456","카레맨",Gender.MALE,45),
-
+        this.memberList = new Member[] {
+                new Member(1, "abc@def.com", "1234", "콩벌레", Gender.MALE, 15),
+                new Member(2, "fff@ggg.com", "4567", "팥죽이", Gender.FEMALE, 30),
+                new Member(3, "xxx@vvv.com", "8765", "카레맨", Gender.FEMALE, 45)
         };
         this.removeMembers=new Member[0];
     }
-    /*
-    모든 회원정보를 출력하는 메서드
 
+    /**
+     * 모든 회원정보를 출력하는 메서드
      */
-    void showMenbers(){
-        System.out.printf("==============현재회원정보 (총 %d명)===========\n",memberList.length);
+    void showMembers() {
+        System.out.printf("=============== 현재 회원정보 ( 총 %d명 ) ============\n", memberList.length);
         for (Member member : memberList) {
             System.out.println(member.inform());
         }
     }
 
     /**
-     * 새로운 회원을 추가하는 메서드
+     * 새로운 회원정보를 추가하는 메서드
      */
-    boolean addMember(Member newMember,String process){
-
-        Member[] targetList=(process.equals("remove")?removeMembers:memberList);
-
-        //push알고리즘
-        Member[] temp= new Member[targetList.length+1];
-        for (int i = 0; i < targetList.length; i++) {
-            temp[i]=targetList[i];
-
+    boolean addMember(Member newMember) {
+        // push 알고리즘
+        Member[] temp = new Member[memberList.length + 1];
+        for (int i = 0; i < memberList.length; i++) {
+            temp[i] = memberList[i];
         }
-        temp[temp.length-1]=newMember;
-
-        if(process.equals("remove")){
-            removeMembers=temp;
-
-        }
-        else{
-            memberList=temp;
-        }
-
-
+        temp[temp.length - 1] = newMember;
+        memberList = temp;
         return true;
-
     }
 
     /**
-     *이메일의 중복여부를 확인하는 메서드
-     * @param email- 중복검사 대상이메일
-     * @return -중복이면 true 아니면 false
+     * 이메일의 중복여부를 확인하는 메서드
+     *
+     * @param1 email - 중복검사 대상 이메일
+     * @return - 중복되었다면 true, 아니라면 false
      */
-    boolean isDupulicateEmail(String email){
+    boolean isDuplicatedEmail(String email) {
         for (Member member : memberList) {
-            if(member.email.equals(email))
+            if (email.equals(member.email)) {
                 return true;
-
+            }
         }
         return false;
     }
+
     /**
-     * 이메일을 통해 특정회원 객체를 찾아서 반환하는 메서드
-     * 찾는 이메일이 없으면 null
-     * @param email-탐색할 멤버객체의 이메일
-     * @return -해당 이메일과 일치하는 회원의 모든 정보객체
-     *          이메일이 일치하지 않으면 null
-     * */
-    Member findMemberByEmail(String email,String process){
-        Member[] targetList=(process.equals("restore")?removeMembers:memberList);
-
-
-        for (Member member : targetList) {
-            if (email.equals(member.email))
-                return member;
-        }
-
-
-
-
-        return null;
+     * 이메일을 통해 특정 회원 객체를 찾아서 반환하는 메서드
+     *
+     * @param1 email - 탐색할 멤버객체의 이메일
+     * @return - 해당 이메일과 일치하는 회원의 모든정보 객체
+     *           이메일이 일치하지 않으면 null 리턴
+     */
+    Member findMemberByEmail(String email) {
+        int index = findMemberIndexByEmail(email);
+        return index >= 0 ? memberList[index] : null;
     }
-
+    /**
+     * 이메일을 통해 인덱스를 가져오는 메서드
+     */
+    int findMemberIndexByEmail(String email) {
+        for (int i = 0; i < memberList.length; i++) {
+            Member member = memberList[i];
+            if (email.equals(member.email)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     /**
      * 비밀번호를 수정하는 메서드
      */
-   void updatePassword(String newPassword,String email){
-       Member member=findMemberByEmail(email,"update");
-       member.password=newPassword;
+    void updatePassword(String newPassword, String email) {
+        Member member = findMemberByEmail(email);
+        member.password = newPassword;
+    }
 
-   }
     /**
      * 회원탈퇴를 처리하는 메서드
      */
-    void deleteMember(String deleteEmail,String deletePassword){
-        Member member=findMemberByEmail(deleteEmail,"delete");
-        if(member.password.equals(deletePassword)){
-            int index=findIndexByEmail(member.email,"delete");
-            Member[] tempList=new Member[memberList.length-1];
-            for (int i = 0; i <index ; i++) {
-                tempList[i]=memberList[i];
-
-            }
-            for (int i =index ; i <tempList.length ; i++) {
-                tempList[i]=memberList[i+1];
-
-            }
-            memberList=tempList;
-            updateNewRemoveMember(member);
-            System.out.println("삭제완료!");
-
-
+    void deleteMember(String email) {
+        // 기존 memberList배열에서 제거
+        int index = findMemberIndexByEmail(email);
+        // 제거대상을 백업
+        Member deletedMember = memberList[index];
+        for (int i = index; i < memberList.length - 1; i++) {
+            memberList[i] = memberList[i + 1];
         }
-        else{
-            System.out.println("비밀번호가 일치하지 않습니다!");
+        Member[] temp = new Member[memberList.length - 1];
+        for (int i = 0; i < temp.length; i++) {
+            temp[i] = memberList[i];
         }
+        memberList = temp;
+
+        // removeMembers배열에 추가
+        temp = new Member[removeMembers.length + 1];
+        for (int i = 0; i < removeMembers.length; i++) {
+            temp[i] = removeMembers[i];
+        }
+        temp[temp.length - 1] = deletedMember;
+        removeMembers = temp;
+
 
     }
 
-   void updateNewRemoveMember(Member removedMember) {
-      addMember(removedMember,"remove");
-       System.out.println("removedMember = " + removedMember.inform());
-
-    }
-
-    int findIndexByEmail(String targetEmail,String process){
-        int NOT_FOUND=-1;
-        Member[] targetList=(process.equals("restore")?removeMembers:memberList);
-
-        for (int i = 0; i < targetList.length; i++) {
-            if(targetList[i].email.equals(targetEmail)){
-                return i;
-            }
-
+    void printRemoveMembers() {
+        System.out.println("===================================");
+        for (Member removeMember : removeMembers) {
+            System.out.println(removeMember.inform());
         }
-
-
-
-        return NOT_FOUND;
+        System.out.println("===================================");
     }
 
-    boolean isOverTen(){
-        if(memberList.length>=10)
-            return true;
-        return false;
+    /**
+     * 현재 저장된 회원의 수를 알려주는 메서드
+     */
+    int getNumberOfMembers() {
+        return memberList.length;
     }
 
-    void restoreMember(String email, String password) {
-        Member member=findMemberByEmail(email,"restore");
-        int restoreIndex=findIndexByEmail(email,"restore");
-        if(member.password.equals(password)){
-            System.out.println("member = " + member.password);
-            addMember(member,"restore");
-            System.out.println("복구되었습니다!");
-
-        }else{
-
-            System.out.println("비밀번호가 일치하지 않습니다!");
-
-        }
+    /**
+     * 패스워드 일치 검증 메서드
+     */
+    boolean isMatchPassword(String inputPw,String originPw){
+        return inputPw.equals(originPw);
 
     }
 }
