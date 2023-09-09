@@ -31,6 +31,11 @@ public class Member {
         return String.format("%d번 | %s | %s | %s | %d세"
                 ,this.memberId,this.email,this.memberName,convertGender,this.age);
     }
+    String personalInform(){
+        String convertGender=this.gender==Gender.MALE?"남성":"여성";
+        return String.format("|이름 :%s |\n|이메일: %s |\n |패스워드: %s |"
+                ,this.memberName,this.email,this.password);
+    }
 }
 
 

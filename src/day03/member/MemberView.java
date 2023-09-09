@@ -19,14 +19,17 @@ public class MemberView {
      */
     void mainView() {
         System.out.println("\n##### 회원 관리 시스템 #####");
-        System.out.println("* 1. 회원 정보 등록하기");
+        ShowOptionOne();
         System.out.println("* 2. 개별회원 정보 조회하기");
         System.out.println("* 3. 전체회원 정보 조회하기");
         System.out.println("* 4. 회원 정보 수정하기");
         System.out.println("* 5. 회원 정보 삭제하기");
         System.out.println("* 6. 프로그램 끝내기");
+        System.out.println("* 7. 회원 복구하기");
         System.out.println("=============================");
     }
+
+
 
     /**
      * 프로그램 화면 흐름을 제어하는 기능
@@ -41,6 +44,7 @@ public class MemberView {
                     signUp();
                     break;
                 case "2":
+                    personalInfo();
                     break;
                 case "3":
                    mr.showMenbers();
@@ -48,8 +52,11 @@ public class MemberView {
                     break;
                 case "4":
                     changePassword();
+                    stop();
                     break;
                 case "5":
+                    resign();
+                    stop();
                     break;
                 case "6":
                     String answer = input("# 정말로 종료합니까? [y/n] : ");
@@ -60,10 +67,45 @@ public class MemberView {
                         continue;
                     }
                     break;
+                case "7":
+                    restore();
+                    stop();
+                    break;
                 default:
                     System.out.println("\n# 메뉴 번호를 다시 입력하세요");
             }
         }
+    }
+
+    void restore() {
+        String email=input(">>복구하고 싶은 이메일을 입력하세요!");
+        String password=input(">> 복구하고싶은 이메일에 해당하는 패스워드를 입력하세요!");
+        if(mr.isOverTen()){
+            System.out.println("가입멤버가 10명이 초과되어 계정복구가 불가합니다");
+            return;
+        }
+        mr.restoreMember(email,password);
+    }
+
+    void ShowOptionOne() {
+        if(!mr.isOverTen()){
+            System.out.println("* 1. 회원 정보 등록하기");
+
+        }
+    }
+
+    void resign() {
+        String email=input("탈퇴하실 이메일을 입력하세요");
+        String password=input("이메일에 해당하는 비밀번호를 입력하세요");
+        mr.deleteMember(email,password);
+
+    }
+
+    void personalInfo() {
+        String email=input("# 조회 대상 이메일을 입력하세요!");
+        Member member=mr.findMemberByEmail(email,"search");
+        System.out.println(member.personalInform());
+        stop();
     }
 
     /**
@@ -74,7 +116,7 @@ public class MemberView {
     private void changePassword() {
         //이메일 입력받은
         String email=input(">>수정대상 이메일");
-        Member member=mr.findMemberByEmail(email);
+        Member member=mr.findMemberByEmail(email,"update");
         if(member != null){
             System.out.printf(" # %s님의 비밀번호를 변경합니다 \n",member.memberName);
             String newPassword=input(">>새로운 비밀번호 :");
@@ -108,7 +150,7 @@ public class MemberView {
         //랜덤 아이디 생성(1,~99999);
         int randomId=(int)(Math.random()*999999)+1;
         Member newMember = new Member(randomId,email, password, name,gender, Integer.parseInt(age));
-        mr.addMember(newMember);
+        mr.addMember(newMember,"add");
         System.out.println("회원가입 성공!!");
         stop();
     }
