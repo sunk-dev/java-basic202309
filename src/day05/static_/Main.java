@@ -2,7 +2,8 @@ package day05.static_;
 
 import util.Utility;
 
-import static util.Utility.*;
+import static util.Utility.input;
+import static util.Utility.makeLine;
 import static java.lang.Math.random;
 import static java.lang.System.out;
 

@@ -7,7 +7,7 @@ public class StringList {
     String [] sArr;
     //생성자를 통해 배열 초기화
 
-    StringList() {
+    public StringList() {
         sArr=new String[0];
     }
     StringList(String ...init){
@@ -100,5 +100,8 @@ public class StringList {
 
      int size() {
         return sArr.length;
+    }
+
+    public String[] getsArr() {return sArr;
     }
 }
